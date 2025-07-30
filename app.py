@@ -3,7 +3,8 @@ import streamlit as st
 from src.pipeline import run_pipeline
 from pathlib import Path
 import streamlit.components.v1 as components
-import json  # <-- Added to handle corrections JSON display
+import json
+from charset_normalizer import from_bytes
 
 st.set_page_config(page_title="📝 Text Style Transformer", layout="wide")
 
@@ -32,12 +33,23 @@ lang_choice = st.radio("🌐 Select Language", ["en", "tr"])
 if uploaded_file:
     input_path = Path("data/input_texts") / uploaded_file.name
     input_path.parent.mkdir(parents=True, exist_ok=True)
-    file_text = uploaded_file.read().decode("utf-8")
-    input_path.write_text(file_text)
+
+    raw_data = uploaded_file.read()
+    results = from_bytes(raw_data)
+    best_guess = results.best()
+
+    if best_guess is not None:
+        encoding = best_guess.encoding
+        file_text = raw_data.decode(encoding, errors='replace')
+    else:
+        file_text = raw_data.decode('utf-8', errors='replace')
+
+    # Save file as UTF-8
+    input_path.write_text(file_text, encoding="utf-8")
 
     st.success(f"File saved: {input_path}")
 
-    # Full file preview (replace previous 10-line preview)
+    # Full file preview
     st.subheader("📄 Input File Preview")
     st.text_area("Full Input Text", value=file_text, height=300)
 
@@ -46,9 +58,6 @@ if uploaded_file:
             outputs, scores = run_pipeline(str(input_path), model_name=model_choice, lang=lang_choice)
 
         st.success("✅ Pipeline completed successfully!")
-
-
-        # --- New: Display corrections JSON if exists ---
 
         corrections_file = Path("data/outputs") / f"{input_path.stem}_corrections.json"
 
@@ -61,7 +70,6 @@ if uploaded_file:
 
                 st.subheader(f"🛠️ Corrections Summary — {len(corrections)} sentences, {total_issues} total issues")
 
-                # Show a clean table of original → corrected sentences with number of issues
                 for i, corr in enumerate(corrections, 1):
                     st.markdown(f"**{i}. Issues: {corr.get('num_issues', '?')}**")
                     st.markdown(f"- Original: {corr['original']}")
@@ -87,8 +95,6 @@ if uploaded_file:
                     st.write(f"**{metric}**: {float(value):.2f}")
                 except (ValueError, TypeError):
                     st.write(f"**{metric}**: {value}")
-
-
 
         # Display diagram (iframe)
         diagram_path = Path("data/outputs") / f"{input_path.stem}_pipeline_diagram.html"
