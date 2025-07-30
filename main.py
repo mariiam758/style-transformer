@@ -17,14 +17,6 @@ if __name__ == "__main__":
             print(f"  {metric}: {value}")
 
 
-# python main.py data/input_texts/example.txt --model mistralai/mistral-7b-instruct-v0.3
-
-# python main.py data/input_texts/example.txt --model "LM Studio: mistralai/mistral-7b-instruct-v0.3"
-
-# python main.py data/input_texts/example.txt --model prithivida/parrot_paraphraser_on_T5
-
-
-
 
 # TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF
 
