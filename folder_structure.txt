@@ -1,0 +1,14 @@
+project-root/
+├── app.py                     # Streamlit UI entrypoint
+├── main.py                    # CLI script to run pipeline
+├── requirements.txt           # Python dependencies
+├── README.md                  # Project description and instructions
+├── data/
+│   ├── input_texts/           # Uploaded input text files
+│   └── outputs/               # Generated outputs (corrections, styles, diagrams, etc.)
+└──src/
+    ├── pipeline.py            # Main pipeline logic
+    ├── text_preprocessing.py  # Grammar correction & text cleanup
+    ├── style_transform.py     # Style transformation logic
+    ├── readability.py         # Readability score calculations
+    └──create_diagram.py      # Pipeline diagram creation
