@@ -50,7 +50,7 @@ streamlit run app.py
 
 - LanguageTool requires Java 17 or later. Make sure Java is installed and added to your system's PATH.
 - The style transformation relies on LLMs, which may require internet or local model access depending on your setup.
-
+- # Ensure JAVA_HOME and PATH are set (adjust to your actual JDK path) in src/text_preprocessing.py 
 
 ### Project Structure
 
