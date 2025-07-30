@@ -5,6 +5,7 @@ torch>=2.2.0
 nltk>=3.8.1
 requests>=2.31.0
 chardet>=5.2.0       # For encoding detection (fix decode errors)
+charset-normalizer
 
 # Plotting & visualization
 plotly>=5.20.0
